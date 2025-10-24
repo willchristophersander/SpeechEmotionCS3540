@@ -39,7 +39,7 @@ Thumbs.db
 .ipynb_checkpoints
 
 # Data files (large datasets)
-features/*.csv
+# features/*.csv  # Commented out to include extracted features
 CREMA-D/
 
 # Model files
