@@ -18,8 +18,14 @@ def load_and_explore_data():
     Load the extracted features and explore the dataset
     This function loads the crema_d_features.csv file and provides basic data exploration
     """
-    # Load the extracted features
-    data_path = 'features/crema_d_features.csv'
+    # Load the extracted features (use cleaned version if available)
+    data_path = 'features/crema_d_features_cleaned.csv'
+    if not os.path.exists(data_path):
+        data_path = 'features/crema_d_features.csv'
+        print("Using original dataset (cleaned version not found)")
+    else:
+        print("Using cleaned dataset")
+    
     df = pd.read_csv(data_path)
     
     print("=== Dataset Overview ===")
@@ -69,27 +75,33 @@ def prepare_features_and_labels(df):
     print(f"\nMissing values in features: {X.isnull().sum().sum()}")
     print(f"Missing values in labels: {y.isnull().sum()}")
     
-    # Clean data - convert string arrays to proper numerical values
-    print("\n=== Data Cleaning ===")
-    print("Cleaning malformed feature data...")
+    # Data should already be cleaned, but verify
+    print("\n=== Data Verification ===")
+    print("Verifying data types...")
     
-    # Create a copy to avoid SettingWithCopyWarning
-    X_clean = X.copy()
+    # Check if any feature columns are still object type (string arrays)
+    object_columns = [col for col in feature_columns if X[col].dtype == 'object']
     
-    # Convert all feature columns to numeric, handling string arrays
-    for col in feature_columns:
-        if X_clean[col].dtype == 'object':
-            # Handle string representations of arrays like '[112.34714674]'
-            # First, strip brackets and convert to float
-            X_clean[col] = X_clean[col].astype(str).str.strip('[]')
-            # Convert to numeric, coercing errors to NaN, then fill with 0
-            X_clean[col] = pd.to_numeric(X_clean[col], errors='coerce').fillna(0)
+    if object_columns:
+        print(f"⚠️  Found {len(object_columns)} columns with object data type - cleaning...")
+        # Create a copy to avoid SettingWithCopyWarning
+        X_clean = X.copy()
+        
+        # Convert all feature columns to numeric, handling string arrays
+        for col in feature_columns:
+            if X_clean[col].dtype == 'object':
+                # Handle string representations of arrays like '[112.34714674]'
+                X_clean[col] = X_clean[col].astype(str).str.strip('[]')
+                X_clean[col] = pd.to_numeric(X_clean[col], errors='coerce').fillna(0)
+        
+        # Ensure all features are numeric
+        X_clean = X_clean.astype(float)
+        print(f"Features cleaned. Final shape: {X_clean.shape}")
+    else:
+        print("✅ All feature columns are already numeric!")
+        X_clean = X.astype(float)
     
-    # Ensure all features are numeric
-    X_clean = X_clean.astype(float)
-    
-    print(f"Features cleaned. Final shape: {X_clean.shape}")
-    print(f"Data types: {X_clean.dtypes.value_counts()}")
+    print(f"Final data types: {X_clean.dtypes.value_counts()}")
     
     return X_clean, y, feature_columns
 
