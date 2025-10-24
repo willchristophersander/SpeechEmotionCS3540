@@ -51,14 +51,14 @@ def clean_feature_data(input_path, output_path):
             print(f"Warning: Column {col} still contains object data")
     
     if string_arrays_found == 0:
-        print("✅ All feature columns successfully converted to numeric!")
+        print(" All feature columns successfully converted to numeric!")
     else:
-        print(f"⚠️  {string_arrays_found} columns still contain non-numeric data")
+        print(f"  {string_arrays_found} columns still contain non-numeric data")
     
     # Save cleaned data
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     df_clean.to_csv(output_path, index=False)
-    print(f"✅ Cleaned data saved to: {output_path}")
+    print(f"Cleaned data saved to: {output_path}")
     
     return df_clean
 
@@ -80,14 +80,14 @@ def main():
             print(f"\n--- Cleaning {input_path} ---")
             clean_feature_data(input_path, output_path)
         else:
-            print(f"⚠️  File not found: {input_path}")
+            print(f"File not found: {input_path}")
     
     print("\n=== Dataset Cleaning Complete ===")
     print("Cleaned files created:")
     for _, output_path in files_to_clean:
         if os.path.exists(output_path):
             file_size = os.path.getsize(output_path) / (1024 * 1024)  # MB
-            print(f"  ✅ {output_path} ({file_size:.1f} MB)")
+            print(f"{output_path} ({file_size:.1f} MB)")
 
 if __name__ == "__main__":
     main()

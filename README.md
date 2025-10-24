@@ -22,4 +22,10 @@ pip install -r requirements.txt
 ```python
 # Run the main feature extraction pipeline
 python extract_features.py
+
+# Prepare features and labels for ML training
+python prepare_features_and_labels.py
+
+# Clean dataset files (if needed)
+python clean_dataset.py
 ```

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Machine Learning Pipeline for Speech Emotion Recognition
-Basic scaffolding for emotion classification using extracted features
+Feature and Label Preparation for Speech Emotion Recognition
+Prepares extracted features and labels for machine learning model training
 """
 
 import pandas as pd
@@ -243,10 +243,10 @@ def evaluation_metrics_planning():
 
 def main():
     """
-    Main function - orchestrates the data loading and preparation
-    This is the entry point that loads data and prepares it for ML training
+    Main function - orchestrates the feature and label preparation
+    This is the entry point that loads data and prepares features and labels for ML training
     """
-    print("=== Speech Emotion Recognition - Data Preparation ===")
+    print("=== Speech Emotion Recognition - Feature and Label Preparation ===")
     
     # Step 1: Load and explore the dataset
     df = load_and_explore_data()
