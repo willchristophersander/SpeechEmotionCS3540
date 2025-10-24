@@ -88,10 +88,10 @@ def prepare_features_and_labels(df):
     # Ensure all features are numeric
     X_clean = X_clean.astype(float)
     
-    print(f"Features cleaned. Final shape: {X.shape}")
-    print(f"Data types: {X.dtypes.value_counts()}")
+    print(f"Features cleaned. Final shape: {X_clean.shape}")
+    print(f"Data types: {X_clean.dtypes.value_counts()}")
     
-    return X, y, feature_columns
+    return X_clean, y, feature_columns
 
 def encode_labels(y):
     """
