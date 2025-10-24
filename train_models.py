@@ -1,404 +1,275 @@
 #!/usr/bin/env python3
 """
 Machine Learning Pipeline for Speech Emotion Recognition
-Trains and evaluates multiple ML models for emotion classification
+Basic scaffolding for emotion classification using extracted features
 """
 
 import pandas as pd
 import numpy as np
-from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier, VotingClassifier
-from sklearn.svm import SVC
-from sklearn.linear_model import LogisticRegression
-from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-from sklearn.model_selection import cross_val_score, GridSearchCV
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler, LabelEncoder
+from sklearn.metrics import classification_report, accuracy_score
 import matplotlib.pyplot as plt
 import seaborn as sns
-import joblib
-import json
-from datetime import datetime
-import warnings
-warnings.filterwarnings('ignore')
+import os
 
-class EmotionClassifier:
-    """Machine learning pipeline for emotion classification"""
+def load_and_explore_data():
+    """
+    Load the extracted features and explore the dataset
+    This function loads the crema_d_features.csv file and provides basic data exploration
+    """
+    # Load the extracted features
+    data_path = 'features/crema_d_features.csv'
+    df = pd.read_csv(data_path)
     
-    def __init__(self):
-        self.models = {}
-        self.best_model = None
-        self.best_score = 0
-        self.results = {}
-        
-    def load_processed_data(self, data_path):
-        """Load processed data"""
-        self.df = pd.read_csv(data_path)
-        
-        # Load metadata
-        metadata_path = data_path.replace('.csv', '_metadata.json')
-        with open(metadata_path, 'r') as f:
-            self.metadata = json.load(f)
-        
-        print(f"Loaded dataset with shape: {self.df.shape}")
-        return self.df
+    print("=== Dataset Overview ===")
+    print(f"Dataset shape: {df.shape}")
+    print(f"Features: {df.shape[1] - 4}")  # Subtract non-feature columns
+    print(f"Samples: {df.shape[0]}")
     
-    def prepare_data(self):
-        """Prepare data for training"""
-        # Get feature columns
-        if self.metadata['selected_features']:
-            feature_cols = self.metadata['selected_features']
-        else:
-            feature_cols = self.metadata['feature_columns']
-        
-        # Remove non-feature columns
-        feature_cols = [col for col in feature_cols if col not in 
-                       ['emotion', 'intensity', 'actor_id', 'sentence', 'filename', 'file_path']]
-        
-        self.X = self.df[feature_cols]
-        self.y = self.df['emotion_encoded']
-        
-        print(f"Features: {self.X.shape}, Target: {self.y.shape}")
-        return self.X, self.y
+    # Display basic info about the dataset
+    print("\n=== Column Information ===")
+    print("Feature columns:", df.shape[1] - 4)  # emotion, intensity, actor_id, file_name
+    print("Non-feature columns:", ['emotion', 'intensity', 'actor_id', 'file_name'])
     
-    def define_models(self):
-        """Define machine learning models"""
-        self.models = {
-            'Random Forest': RandomForestClassifier(
-                n_estimators=100,
-                random_state=42,
-                n_jobs=-1
-            ),
-            'Gradient Boosting': GradientBoostingClassifier(
-                n_estimators=100,
-                random_state=42
-            ),
-            'SVM': SVC(
-                kernel='rbf',
-                random_state=42,
-                probability=True
-            ),
-            'Logistic Regression': LogisticRegression(
-                random_state=42,
-                max_iter=1000
-            ),
-            'Neural Network': MLPClassifier(
-                hidden_layer_sizes=(100, 50),
-                random_state=42,
-                max_iter=500
-            )
-        }
-        return self.models
+    # Display emotion distribution
+    print("\n=== Emotion Distribution ===")
+    print(df['emotion'].value_counts())
     
-    def train_models(self, X_train, y_train, X_test, y_test):
-        """Train all models and evaluate performance"""
-        print("Training models...")
-        
-        for name, model in self.models.items():
-            print(f"\nTraining {name}...")
-            
-            # Train model
-            model.fit(X_train, y_train)
-            
-            # Make predictions
-            y_pred = model.predict(X_test)
-            y_pred_proba = model.predict_proba(X_test) if hasattr(model, 'predict_proba') else None
-            
-            # Calculate metrics
-            accuracy = accuracy_score(y_test, y_pred)
-            
-            # Cross-validation score
-            cv_scores = cross_val_score(model, X_train, y_train, cv=5, scoring='accuracy')
-            
-            # Store results
-            self.results[name] = {
-                'model': model,
-                'accuracy': accuracy,
-                'cv_mean': cv_scores.mean(),
-                'cv_std': cv_scores.std(),
-                'predictions': y_pred,
-                'probabilities': y_pred_proba
-            }
-            
-            print(f"Accuracy: {accuracy:.4f}")
-            print(f"CV Score: {cv_scores.mean():.4f} (+/- {cv_scores.std() * 2:.4f})")
-            
-            # Update best model
-            if accuracy > self.best_score:
-                self.best_score = accuracy
-                self.best_model = model
-                self.best_model_name = name
-        
-        print(f"\nBest model: {self.best_model_name} with accuracy: {self.best_score:.4f}")
-        return self.results
+    # Display intensity distribution  
+    print("\n=== Intensity Distribution ===")
+    print(df['intensity'].value_counts())
     
-    def hyperparameter_tuning(self, X_train, y_train):
-        """Perform hyperparameter tuning for best model"""
-        print(f"\nPerforming hyperparameter tuning for {self.best_model_name}...")
-        
-        if self.best_model_name == 'Random Forest':
-            param_grid = {
-                'n_estimators': [50, 100, 200],
-                'max_depth': [10, 20, None],
-                'min_samples_split': [2, 5, 10]
-            }
-        elif self.best_model_name == 'Gradient Boosting':
-            param_grid = {
-                'n_estimators': [50, 100, 200],
-                'learning_rate': [0.01, 0.1, 0.2],
-                'max_depth': [3, 5, 7]
-            }
-        elif self.best_model_name == 'SVM':
-            param_grid = {
-                'C': [0.1, 1, 10],
-                'gamma': ['scale', 'auto', 0.001, 0.01]
-            }
-        elif self.best_model_name == 'Logistic Regression':
-            param_grid = {
-                'C': [0.1, 1, 10],
-                'penalty': ['l1', 'l2'],
-                'solver': ['liblinear', 'saga']
-            }
-        elif self.best_model_name == 'Neural Network':
-            param_grid = {
-                'hidden_layer_sizes': [(50,), (100,), (100, 50), (100, 50, 25)],
-                'learning_rate': ['constant', 'adaptive'],
-                'alpha': [0.0001, 0.001, 0.01]
-            }
-        else:
-            print("No hyperparameter tuning defined for this model")
-            return self.best_model
-        
-        # Grid search
-        grid_search = GridSearchCV(
-            self.best_model,
-            param_grid,
-            cv=5,
-            scoring='accuracy',
-            n_jobs=-1,
-            verbose=1
-        )
-        
-        grid_search.fit(X_train, y_train)
-        
-        print(f"Best parameters: {grid_search.best_params_}")
-        print(f"Best CV score: {grid_search.best_score_:.4f}")
-        
-        self.tuned_model = grid_search.best_estimator_
-        return self.tuned_model
+    # Display actor distribution
+    print(f"\n=== Actor Information ===")
+    print(f"Number of unique actors: {df['actor_id'].nunique()}")
+    print(f"Actors per emotion:")
+    print(df.groupby('emotion')['actor_id'].nunique())
     
-    def create_ensemble_model(self, X_train, y_train):
-        """Create ensemble model from top performers"""
-        print("\nCreating ensemble model...")
-        
-        # Get top 3 models by accuracy
-        top_models = sorted(self.results.items(), key=lambda x: x[1]['accuracy'], reverse=True)[:3]
-        
-        ensemble_models = []
-        for name, result in top_models:
-            ensemble_models.append((name, result['model']))
-        
-        # Create voting classifier
-        ensemble = VotingClassifier(
-            estimators=ensemble_models,
-            voting='soft'
-        )
-        
-        # Train ensemble
-        ensemble.fit(X_train, y_train)
-        
-        self.ensemble_model = ensemble
-        return ensemble
+    return df
+
+def prepare_features_and_labels(df):
+    """
+    Prepare features (X) and labels (y) for machine learning
+    This function separates the numerical features from the metadata columns
+    """
+    # Separate features from metadata
+    feature_columns = [col for col in df.columns if col not in 
+                      ['emotion', 'intensity', 'actor_id', 'file_name']]
     
-    def evaluate_model(self, model, X_test, y_test, model_name="Model"):
-        """Evaluate model performance"""
-        y_pred = model.predict(X_test)
-        
-        # Calculate metrics
-        accuracy = accuracy_score(y_test, y_pred)
-        
-        # Classification report
-        report = classification_report(y_test, y_pred, output_dict=True)
-        
-        # Confusion matrix
-        cm = confusion_matrix(y_test, y_pred)
-        
-        return {
-            'accuracy': accuracy,
-            'report': report,
-            'confusion_matrix': cm,
-            'predictions': y_pred
-        }
+    X = df[feature_columns]  # All numerical features
+    y = df['emotion']       # Emotion labels
     
-    def plot_confusion_matrix(self, cm, labels, title, save_path=None):
-        """Plot confusion matrix"""
-        plt.figure(figsize=(8, 6))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
-                   xticklabels=labels, yticklabels=labels)
-        plt.title(title)
-        plt.xlabel('Predicted')
-        plt.ylabel('Actual')
-        
-        if save_path:
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        plt.show()
+    print(f"\n=== Feature Preparation ===")
+    print(f"Feature matrix shape: {X.shape}")
+    print(f"Target labels shape: {y.shape}")
+    print(f"Number of features: {len(feature_columns)}")
     
-    def plot_model_comparison(self, save_path=None):
-        """Plot model comparison"""
-        models = list(self.results.keys())
-        accuracies = [self.results[model]['accuracy'] for model in models]
-        cv_means = [self.results[model]['cv_mean'] for model in models]
-        cv_stds = [self.results[model]['cv_std'] for model in models]
-        
-        x = np.arange(len(models))
-        width = 0.35
-        
-        fig, ax = plt.subplots(figsize=(12, 6))
-        bars1 = ax.bar(x - width/2, accuracies, width, label='Test Accuracy', alpha=0.8)
-        bars2 = ax.bar(x + width/2, cv_means, width, label='CV Mean', alpha=0.8, 
-                      yerr=cv_stds, capsize=5)
-        
-        ax.set_xlabel('Models')
-        ax.set_ylabel('Accuracy')
-        ax.set_title('Model Performance Comparison')
-        ax.set_xticks(x)
-        ax.set_xticklabels(models, rotation=45, ha='right')
-        ax.legend()
-        ax.grid(True, alpha=0.3)
-        
-        # Add value labels on bars
-        for bar in bars1:
-            height = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2., height + 0.01,
-                   f'{height:.3f}', ha='center', va='bottom')
-        
-        for bar in bars2:
-            height = bar.get_height()
-            ax.text(bar.get_x() + bar.get_width()/2., height + 0.01,
-                   f'{height:.3f}', ha='center', va='bottom')
-        
-        plt.tight_layout()
-        
-        if save_path:
-            plt.savefig(save_path, dpi=300, bbox_inches='tight')
-        plt.show()
+    # Check for missing values
+    print(f"\nMissing values in features: {X.isnull().sum().sum()}")
+    print(f"Missing values in labels: {y.isnull().sum()}")
     
-    def save_models(self, output_dir):
-        """Save trained models"""
-        import os
-        os.makedirs(output_dir, exist_ok=True)
-        
-        # Save individual models
-        for name, result in self.results.items():
-            model_path = os.path.join(output_dir, f"{name.lower().replace(' ', '_')}.joblib")
-            joblib.dump(result['model'], model_path)
-        
-        # Save best model
-        if self.best_model:
-            best_model_path = os.path.join(output_dir, "best_model.joblib")
-            joblib.dump(self.best_model, best_model_path)
-        
-        # Save tuned model
-        if hasattr(self, 'tuned_model'):
-            tuned_model_path = os.path.join(output_dir, "tuned_model.joblib")
-            joblib.dump(self.tuned_model, tuned_model_path)
-        
-        # Save ensemble model
-        if hasattr(self, 'ensemble_model'):
-            ensemble_model_path = os.path.join(output_dir, "ensemble_model.joblib")
-            joblib.dump(self.ensemble_model, ensemble_model_path)
-        
-        # Save results
-        results_path = os.path.join(output_dir, "model_results.json")
-        with open(results_path, 'w') as f:
-            # Convert numpy arrays to lists for JSON serialization
-            json_results = {}
-            for name, result in self.results.items():
-                json_results[name] = {
-                    'accuracy': result['accuracy'],
-                    'cv_mean': result['cv_mean'],
-                    'cv_std': result['cv_std']
-                }
-            json.dump(json_results, f, indent=2)
-        
-        print(f"Models saved to: {output_dir}")
+    # Clean data - convert string arrays to proper numerical values
+    print("\n=== Data Cleaning ===")
+    print("Cleaning malformed feature data...")
+    
+    # Create a copy to avoid SettingWithCopyWarning
+    X_clean = X.copy()
+    
+    # Convert all feature columns to numeric, handling string arrays
+    for col in feature_columns:
+        if X_clean[col].dtype == 'object':
+            # Handle string representations of arrays like '[112.34714674]'
+            # First, strip brackets and convert to float
+            X_clean[col] = X_clean[col].astype(str).str.strip('[]')
+            # Convert to numeric, coercing errors to NaN, then fill with 0
+            X_clean[col] = pd.to_numeric(X_clean[col], errors='coerce').fillna(0)
+    
+    # Ensure all features are numeric
+    X_clean = X_clean.astype(float)
+    
+    print(f"Features cleaned. Final shape: {X.shape}")
+    print(f"Data types: {X.dtypes.value_counts()}")
+    
+    return X, y, feature_columns
+
+def encode_labels(y):
+    """
+    Encode emotion labels to numerical values
+    This function converts string emotion labels to integers for ML algorithms
+    """
+    # Create label encoder
+    le = LabelEncoder()
+    y_encoded = le.fit_transform(y)
+    
+    # Display label mapping
+    print("\n=== Label Encoding ===")
+    label_mapping = dict(zip(le.classes_, le.transform(le.classes_)))
+    print("Emotion to number mapping:")
+    for emotion, number in label_mapping.items():
+        print(f"  {emotion}: {number}")
+    
+    return y_encoded, le, label_mapping
+
+def split_and_scale_data(X, y_encoded):
+    """
+    Split data into train/test sets and scale features
+    This function creates training and testing splits and normalizes the features
+    """
+    # Split data into train and test sets
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y_encoded, test_size=0.2, random_state=42, stratify=y_encoded
+    )
+    
+    print(f"\n=== Data Splitting ===")
+    print(f"Training set: {X_train.shape[0]} samples")
+    print(f"Test set: {X_test.shape[0]} samples")
+    print(f"Train/Test ratio: {X_train.shape[0] / (X_train.shape[0] + X_test.shape[0]):.2f}")
+    
+    # Scale features
+    scaler = StandardScaler()
+    X_train_scaled = scaler.fit_transform(X_train)
+    X_test_scaled = scaler.transform(X_test)
+    
+    print(f"\n=== Feature Scaling ===")
+    print("Features scaled using StandardScaler")
+    print(f"Training features mean: {X_train_scaled.mean():.6f}")
+    print(f"Training features std: {X_train_scaled.std():.6f}")
+    
+    return X_train_scaled, X_test_scaled, y_train, y_test, scaler
+
+def visualize_data_distribution(df, y_encoded, label_mapping):
+    """
+    Create visualizations to understand the data distribution
+    This function creates plots to visualize emotion distribution and feature relationships
+    """
+    print("\n=== Creating Data Visualizations ===")
+    
+    # Create emotion distribution plot
+    plt.figure(figsize=(12, 5))
+    
+    # Plot 1: Emotion distribution
+    plt.subplot(1, 2, 1)
+    emotion_counts = df['emotion'].value_counts()
+    plt.bar(emotion_counts.index, emotion_counts.values)
+    plt.title('Emotion Distribution in Dataset')
+    plt.xlabel('Emotion')
+    plt.ylabel('Count')
+    plt.xticks(rotation=45)
+    
+    # Plot 2: Intensity distribution
+    plt.subplot(1, 2, 2)
+    intensity_counts = df['intensity'].value_counts()
+    plt.bar(intensity_counts.index, intensity_counts.values)
+    plt.title('Intensity Distribution in Dataset')
+    plt.xlabel('Intensity')
+    plt.ylabel('Count')
+    plt.xticks(rotation=45)
+    
+    plt.tight_layout()
+    plt.savefig('data_distribution.png', dpi=300, bbox_inches='tight')
+    plt.show()
+    
+    print("Data distribution plots saved as 'data_distribution.png'")
+
+def define_model_architecture():
+    """
+    Define the machine learning models to be used
+    This function outlines the models that should be implemented for emotion classification
+    """
+    print("\n=== Model Architecture Planning ===")
+    print("Recommended models for emotion classification:")
+    print("1. Random Forest - Good baseline, handles feature importance")
+    print("2. Support Vector Machine (SVM) - Good for high-dimensional data")
+    print("3. Logistic Regression - Simple, interpretable baseline")
+    print("4. Neural Network - Can capture complex patterns")
+    print("5. Gradient Boosting - Often performs well on tabular data")
+    
+    print("\nModel selection considerations:")
+    print("- Start with Random Forest for baseline performance")
+    print("- Use SVM with RBF kernel for non-linear relationships")
+    print("- Try ensemble methods (Voting, Bagging) for improved performance")
+    print("- Consider hyperparameter tuning for best models")
+
+def model_training_workflow():
+    """
+    Outline the complete model training workflow
+    This function provides a roadmap for implementing the ML pipeline
+    """
+    print("\n=== Model Training Workflow ===")
+    print("1. Load and explore the dataset")
+    print("2. Prepare features and encode labels")
+    print("3. Split data into train/test sets")
+    print("4. Scale features appropriately")
+    print("5. Train multiple baseline models")
+    print("6. Evaluate model performance using cross-validation")
+    print("7. Select best performing model(s)")
+    print("8. Perform hyperparameter tuning")
+    print("9. Create ensemble models if beneficial")
+    print("10. Final evaluation on test set")
+    print("11. Save trained models for deployment")
+
+def evaluation_metrics_planning():
+    """
+    Plan the evaluation metrics and visualization strategy
+    This function outlines how to evaluate model performance
+    """
+    print("\n=== Evaluation Strategy ===")
+    print("Key metrics to track:")
+    print("- Accuracy: Overall correctness")
+    print("- Precision: Per-class precision scores")
+    print("- Recall: Per-class recall scores")
+    print("- F1-Score: Harmonic mean of precision and recall")
+    print("- Confusion Matrix: Detailed error analysis")
+    
+    print("\nVisualizations to create:")
+    print("- Confusion matrix heatmap")
+    print("- ROC curves for each emotion class")
+    print("- Feature importance plots")
+    print("- Model comparison bar charts")
+    print("- Learning curves for model selection")
 
 def main():
-    """Main training pipeline"""
+    """
+    Main function - orchestrates the data loading and preparation
+    This is the entry point that loads data and prepares it for ML training
+    """
+    print("=== Speech Emotion Recognition - Data Preparation ===")
     
-    # Paths
-    data_path = "/Users/will/Projects/SpeechEmotionCS3540/features/processed_data.csv"
-    output_dir = "/Users/will/Projects/SpeechEmotionCS3540/models"
+    # Step 1: Load and explore the dataset
+    df = load_and_explore_data()
     
-    # Initialize classifier
-    classifier = EmotionClassifier()
+    # Step 2: Prepare features and labels
+    X, y, feature_columns = prepare_features_and_labels(df)
     
-    # Load data
-    print("Loading processed data...")
-    df = classifier.load_processed_data(data_path)
+    # Step 3: Encode labels
+    y_encoded, label_encoder, label_mapping = encode_labels(y)
     
-    # Prepare data
-    print("Preparing data...")
-    X, y = classifier.prepare_data()
+    # Step 4: Split and scale data
+    X_train, X_test, y_train, y_test, scaler = split_and_scale_data(X, y_encoded)
     
-    # Split data
-    from sklearn.model_selection import train_test_split
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42, stratify=y
-    )
+    # Step 5: Create visualizations
+    visualize_data_distribution(df, y_encoded, label_mapping)
     
-    # Define models
-    print("Defining models...")
-    models = classifier.define_models()
+    # Step 6: Plan model architecture
+    define_model_architecture()
     
-    # Train models
-    print("Training models...")
-    results = classifier.train_models(X_train, y_train, X_test, y_test)
+    # Step 7: Outline training workflow
+    model_training_workflow()
     
-    # Hyperparameter tuning
-    print("Performing hyperparameter tuning...")
-    tuned_model = classifier.hyperparameter_tuning(X_train, y_train)
+    # Step 8: Plan evaluation strategy
+    evaluation_metrics_planning()
     
-    # Create ensemble
-    print("Creating ensemble model...")
-    ensemble = classifier.create_ensemble_model(X_train, y_train)
+    print("\n=== Data Preparation Complete ===")
+    print("The dataset is now ready for machine learning model training.")
+    print("Next steps:")
+    print("1. Implement the model training functions")
+    print("2. Add cross-validation and hyperparameter tuning")
+    print("3. Create evaluation and visualization functions")
+    print("4. Save trained models for future use")
     
-    # Evaluate ensemble
-    print("Evaluating ensemble model...")
-    ensemble_results = classifier.evaluate_model(ensemble, X_test, y_test, "Ensemble")
-    print(f"Ensemble accuracy: {ensemble_results['accuracy']:.4f}")
-    
-    # Create visualizations
-    print("Creating visualizations...")
-    classifier.plot_model_comparison(save_path=f"{output_dir}/model_comparison.png")
-    
-    # Plot confusion matrix for best model
-    if hasattr(classifier, 'tuned_model'):
-        best_model = classifier.tuned_model
-        best_name = f"Tuned {classifier.best_model_name}"
-    else:
-        best_model = classifier.best_model
-        best_name = classifier.best_model_name
-    
-    best_results = classifier.evaluate_model(best_model, X_test, y_test, best_name)
-    
-    # Get label names
-    label_mapping = classifier.metadata['label_mapping']
-    label_names = list(label_mapping.keys())
-    
-    classifier.plot_confusion_matrix(
-        best_results['confusion_matrix'], 
-        label_names,
-        f"Confusion Matrix - {best_name}",
-        save_path=f"{output_dir}/confusion_matrix.png"
-    )
-    
-    # Save models
-    print("Saving models...")
-    classifier.save_models(output_dir)
-    
-    print("\nTraining completed!")
-    print(f"Best model: {classifier.best_model_name}")
-    print(f"Best accuracy: {classifier.best_score:.4f}")
-    print(f"Ensemble accuracy: {ensemble_results['accuracy']:.4f}")
+    return X_train, X_test, y_train, y_test, label_encoder, scaler
 
 if __name__ == "__main__":
-    main()
+    # Run the data preparation pipeline
+    X_train, X_test, y_train, y_test, label_encoder, scaler = main()
