@@ -57,9 +57,22 @@ class AudioPreprocessor:
             )
         
         # 4. Trim silence from beginning and end
-        audio_trimmed, _ = librosa.effects.trim(audio, top_db=30)
-        if len(audio_trimmed) > self.sample_rate * 0.3:  # At least 0.3s
-            audio = audio_trimmed
+        # Workaround for numba/librosa compatibility issues on Python 3.13
+        try:
+            audio_trimmed, _ = librosa.effects.trim(audio, top_db=30)
+            if len(audio_trimmed) > self.sample_rate * 0.3:  # At least 0.3s
+                audio = audio_trimmed
+        except (NotImplementedError, SystemError, Exception) as e:
+            # Fallback: simple energy-based trimming if librosa.trim fails
+            # This can happen with numba/librosa compatibility issues
+            import warnings
+            warnings.warn(f"librosa.trim failed ({type(e).__name__}), using fallback trimming")
+            # Simple fallback: remove leading/trailing silence based on RMS
+            rms = np.sqrt(np.mean(audio ** 2))
+            threshold = rms * 0.1  # 10% of RMS as silence threshold
+            non_silent = np.where(np.abs(audio) > threshold)[0]
+            if len(non_silent) > self.sample_rate * 0.3:
+                audio = audio[non_silent[0]:non_silent[-1]+1]
         
         # 5. Volume normalization to consistent RMS
         rms = np.sqrt(np.mean(audio ** 2))
