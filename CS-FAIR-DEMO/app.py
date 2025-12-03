@@ -41,20 +41,21 @@ def load_model():
     from pathlib import Path
     checkpoint_dir = Path(__file__).parent / 'checkpoints' / '4class'
     
-    # Try quantized model first (smaller, faster)
-    quantized_path = checkpoint_dir / 'crnn_emotion_model_quantized.pth'
+    # Prefer regular model for accuracy (quantized may have slight accuracy loss)
+    # Fall back to quantized if regular model not available
     regular_path = checkpoint_dir / 'crnn_emotion_model.pth'
+    quantized_path = checkpoint_dir / 'crnn_emotion_model_quantized.pth'
     
-    if quantized_path.exists():
-        print("Loading quantized CRNN model (optimized)...")
-        model_path = quantized_path
-        is_quantized = True
-    elif regular_path.exists():
-        print("Loading CRNN model...")
+    if regular_path.exists():
+        print("Loading CRNN model (full precision for accuracy)...")
         model_path = regular_path
         is_quantized = False
+    elif quantized_path.exists():
+        print("Loading quantized CRNN model (optimized, may have slight accuracy loss)...")
+        model_path = quantized_path
+        is_quantized = True
     else:
-        raise FileNotFoundError(f"Model not found. Checked: {quantized_path} and {regular_path}")
+        raise FileNotFoundError(f"Model not found. Checked: {regular_path} and {quantized_path}")
     
     checkpoint = torch.load(model_path, map_location='cpu')
     
