@@ -538,18 +538,39 @@
                 reader.onloadend = async () => {
                     const base64 = reader.result.split(',')[1];
                     
-                    const response = await fetch('/predict', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ audio: base64 })
-                    });
+                    // Add timeout: 60 seconds for first request (model loading), 10 seconds for subsequent
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
                     
-                    const result = await response.json();
-                    
-                    if (result.error) {
-                        status.textContent = 'Error: ' + result.error;
-                    } else {
-                        showResult(result);
+                    try {
+                        const response = await fetch('/predict', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ audio: base64 }),
+                            signal: controller.signal
+                        });
+                        
+                        clearTimeout(timeoutId);
+                        
+                        if (!response.ok) {
+                            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                        }
+                        
+                        const result = await response.json();
+                        
+                        if (result.error) {
+                            status.textContent = 'Error: ' + result.error;
+                        } else {
+                            showResult(result);
+                        }
+                    } catch (error) {
+                        clearTimeout(timeoutId);
+                        if (error.name === 'AbortError') {
+                            status.textContent = 'Request timed out. The model may be loading (first request takes 15-30 seconds). Please try again.';
+                        } else {
+                            status.textContent = 'Error: ' + error.message;
+                        }
+                        console.error('Fetch error:', error);
                     }
                 };
                 reader.readAsDataURL(wavBlob);
