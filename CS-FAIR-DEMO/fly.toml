@@ -35,5 +35,5 @@ primary_region = "iad"  # Change to your preferred region (iad=Washington DC, or
   cpus = 1
 
 [processes]
-  app = "gunicorn app:app --timeout 120 --workers 1 --threads 2 --bind 0.0.0.0:$PORT"
+  app = "gunicorn app:app --timeout 120 --workers 1 --threads 2 --bind 0.0.0.0:8080"
 
