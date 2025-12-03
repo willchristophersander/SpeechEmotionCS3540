@@ -5,9 +5,7 @@ app = "speech-emotion-recognition"
 primary_region = "iad"  # Change to your preferred region (iad=Washington DC, ord=Chicago, etc.)
 
 [build]
-  # Use Dockerfile for more control (faster builds with CPU-only PyTorch)
-  # Alternative: Use buildpack (automatic, but downloads CUDA libraries)
-  # builder = "paketobuildpacks/builder:base"
+  # Force use of Dockerfile (don't auto-detect Python/Buildpacks)
   dockerfile = "Dockerfile"
 
 [env]
