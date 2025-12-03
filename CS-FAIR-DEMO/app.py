@@ -38,21 +38,45 @@ model = None
 def load_model():
     global model
     
-    print("Loading CRNN model...")
-    
     from pathlib import Path
-    model_path = Path(__file__).parent / 'checkpoints' / '4class' / 'crnn_emotion_model.pth'
+    checkpoint_dir = Path(__file__).parent / 'checkpoints' / '4class'
     
-    if not model_path.exists():
-        raise FileNotFoundError(f"Model not found at {model_path}")
+    # Try quantized model first (smaller, faster)
+    quantized_path = checkpoint_dir / 'crnn_emotion_model_quantized.pth'
+    regular_path = checkpoint_dir / 'crnn_emotion_model.pth'
+    
+    if quantized_path.exists():
+        print("Loading quantized CRNN model (optimized)...")
+        model_path = quantized_path
+        is_quantized = True
+    elif regular_path.exists():
+        print("Loading CRNN model...")
+        model_path = regular_path
+        is_quantized = False
+    else:
+        raise FileNotFoundError(f"Model not found. Checked: {quantized_path} and {regular_path}")
     
     checkpoint = torch.load(model_path, map_location='cpu')
     
+    # Create model
     model = CRNN(n_mels=N_MELS, num_classes=len(EMOTIONS))
-    model.load_state_dict(checkpoint['model_state'])
+    
+    # Load weights (handle different checkpoint formats)
+    if 'model_state_dict' in checkpoint:
+        model.load_state_dict(checkpoint['model_state_dict'])
+    elif 'model_state' in checkpoint:
+        model.load_state_dict(checkpoint['model_state'])
+    else:
+        model.load_state_dict(checkpoint)
+    
+    # If quantized, the model is already quantized in the checkpoint
+    # For quantized models loaded from file, they're already in quantized state
+    if is_quantized and checkpoint.get('quantized', False):
+        print("  Using quantized model (4x smaller, 2x faster)")
+    
     model.eval()
     
-    # Get accuracy info (check multiple possible keys)
+    # Get accuracy info
     val_acc = checkpoint.get('val_accuracy', checkpoint.get('accuracy', None))
     epoch = checkpoint.get('epoch', 'unknown')
     
