@@ -48,199 +48,32 @@
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        .record-section {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        #recordBtn {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            border: 3px solid #4A90D9;
-            background: rgba(74, 144, 217, 0.1);
-            color: #4A90D9;
-            font-size: 1.2rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(74, 144, 217, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        
-        #recordBtn:hover {
-            transform: scale(1.05);
-            background: rgba(74, 144, 217, 0.2);
-            box-shadow: 0 6px 30px rgba(74, 144, 217, 0.3);
-        }
-        
-        #recordBtn.recording {
-            background: rgba(255, 68, 68, 0.2);
-            border-color: #FF4444;
-            color: #FF4444;
-            animation: pulse 1s infinite;
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        .status {
-            margin-top: 20px;
-            font-size: 1.1rem;
-            color: #aaa;
-        }
-        
-        .timer {
-            font-size: 2rem;
-            font-weight: 600;
-            color: #4A90D9;
-            margin-top: 10px;
-        }
-        
-        .result-section {
-            display: none;
-            text-align: center;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .emotion-result {
-            font-size: 3rem;
-            font-weight: 300;
-            margin-bottom: 10px;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-        
-        .emotion-label {
-            font-size: 2rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-        
-        .confidence {
-            font-size: 1.2rem;
-            color: #888;
-            margin-bottom: 30px;
-        }
-        
-        .probabilities {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-        
-        .prob-item {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            padding: 15px;
-            text-align: left;
-        }
-        
-        .prob-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-        }
-        
-        .prob-name {
-            font-weight: 500;
-        }
-        
-        .prob-value {
-            font-weight: 600;
-        }
-        
-        .prob-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 3px;
-            overflow: hidden;
-        }
-        
-        .prob-fill {
-            height: 100%;
-            border-radius: 3px;
-            transition: width 0.5s ease;
-        }
-        
-        .try-again {
-            margin-top: 30px;
-            padding: 12px 35px;
-            background: transparent;
-            border: 2px solid #4A90D9;
-            color: #4A90D9;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        
-        .try-again:hover {
-            background: #4A90D9;
-            color: white;
-        }
-        
-        .instructions {
-            background: rgba(74, 144, 217, 0.1);
-            border-left: 4px solid #4A90D9;
-            padding: 15px 20px;
-            border-radius: 0 8px 8px 0;
-            margin-bottom: 30px;
-        }
-        
-        .instructions h3 {
-            margin-bottom: 10px;
-            color: #4A90D9;
-            font-size: 1rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .instructions p {
-            color: #aaa;
-            line-height: 1.6;
-        }
-        
         .tabs {
             display: flex;
             gap: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             border-bottom: 2px solid rgba(255, 255, 255, 0.1);
         }
         
         .tab {
             padding: 12px 24px;
+            cursor: pointer;
             background: transparent;
             border: none;
-            color: #aaa;
+            color: #888;
             font-size: 1rem;
             font-weight: 500;
-            cursor: pointer;
             border-bottom: 2px solid transparent;
-            transition: all 0.3s ease;
+            transition: all 0.3s;
+        }
+        
+        .tab:hover {
+            color: #fff;
         }
         
         .tab.active {
             color: #4A90D9;
             border-bottom-color: #4A90D9;
-        }
-        
-        .tab:hover {
-            color: #fff;
         }
         
         .tab-content {
@@ -251,32 +84,146 @@
             display: block;
         }
         
-        .citations {
-            max-height: 500px;
-            overflow-y: auto;
-            padding-right: 10px;
+        #recordSection {
+            text-align: center;
+        }
+        
+        #recordBtn {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid #4A90D9;
+            background: rgba(74, 144, 217, 0.1);
+            color: #4A90D9;
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px auto;
+            display: block;
+        }
+        
+        #recordBtn:hover {
+            background: rgba(74, 144, 217, 0.2);
+            transform: scale(1.05);
+        }
+        
+        #recordBtn.recording {
+            background: #FF4444;
+            border-color: #FF4444;
+            color: #fff;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        #status {
+            color: #888;
+            margin: 20px 0;
+            font-size: 1rem;
+        }
+        
+        #timer {
+            font-size: 1.5rem;
+            color: #4A90D9;
+            margin: 10px 0;
+            font-weight: 600;
+        }
+        
+        #resultSection {
+            text-align: center;
+            display: none;
+        }
+        
+        #emoji {
+            font-size: 4rem;
+            margin: 20px 0;
+        }
+        
+        #emotionLabel {
+            font-size: 2rem;
+            font-weight: 600;
+            margin: 10px 0;
+        }
+        
+        #confidence {
+            color: #888;
+            margin: 10px 0;
+        }
+        
+        #probabilities {
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .prob-item {
+            margin: 15px 0;
+        }
+        
+        .prob-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .prob-name {
+            color: #fff;
+        }
+        
+        .prob-value {
+            color: #888;
+        }
+        
+        .prob-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .prob-fill {
+            height: 100%;
+            transition: width 0.3s;
+        }
+        
+        #tryAgain {
+            margin-top: 30px;
+            padding: 12px 30px;
+            background: #4A90D9;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        #tryAgain:hover {
+            background: #3a7bc8;
+            transform: translateY(-2px);
         }
         
         .citation-item {
-            margin-bottom: 20px;
+            margin: 20px 0;
             padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             border-radius: 8px;
-            border-left: 3px solid #4A90D9;
         }
         
         .citation-item h4 {
             color: #4A90D9;
             margin-bottom: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
         }
         
         .citation-item p {
             color: #ccc;
-            font-size: 0.9rem;
             line-height: 1.6;
-            margin: 0;
+            font-size: 0.9rem;
         }
         
         .citation-item a {
@@ -289,130 +236,116 @@
         }
         
         footer {
-            margin-top: 60px;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
             text-align: center;
             color: #888;
             font-size: 0.9rem;
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         footer .authors {
-            margin-bottom: 10px;
-            color: #aaa;
-        }
-        
-        footer .authors strong {
+            margin-bottom: 8px;
             color: #fff;
         }
     </style>
 </head>
 <body>
-    <h1>Speech Emotion Recognition</h1>
-    <p class="subtitle">CRNN Model • 77% Accuracy • CNN + BiLSTM on Spectrograms</p>
-    
     <div class="container">
+        <h1>Speech Emotion Recognition</h1>
+        <p class="subtitle">CRNN Model Demo - Classify emotions from speech</p>
+        
         <div class="tabs">
             <button class="tab active" onclick="switchTab('demo')">Demo</button>
             <button class="tab" onclick="switchTab('citations')">Citations</button>
         </div>
         
         <div id="demoTab" class="tab-content active">
-            <div class="instructions">
-                <h3>Instructions</h3>
-                <p>Click the record button and speak for 3-4 seconds with clear emotion. The system analyzes acoustic patterns including pitch, spectral characteristics, and prosodic features to classify your emotional state.</p>
-            </div>
-            
-            <div class="record-section" id="recordSection">
+            <div id="recordSection">
                 <button id="recordBtn">REC</button>
-                <p class="status" id="status">Click to start recording</p>
-                <p class="timer" id="timer"></p>
+                <div id="status">Click to start recording</div>
+                <div id="timer"></div>
             </div>
             
-            <div class="result-section" id="resultSection">
-                <div class="emotion-result" id="emoji">CLASSIFIED</div>
-                <div class="emotion-label" id="emotionLabel">Neutral</div>
-                <div class="confidence" id="confidence">85% confident</div>
-                
-                <div class="probabilities" id="probabilities"></div>
-                
-                <button class="try-again" id="tryAgain">Record Again</button>
+            <div id="resultSection">
+                <div id="emoji">CLASSIFIED</div>
+                <div id="emotionLabel"></div>
+                <div id="confidence"></div>
+                <div id="probabilities"></div>
+                <button id="tryAgain">Try Again</button>
             </div>
         </div>
         
         <div id="citationsTab" class="tab-content">
-            <div class="citations">
-                <div class="citation-item">
-                    <h4>1. CREMA-D Dataset</h4>
-                    <p>Cao, H., Cooper, D. G., Keutmann, M. K., Gur, R. C., Nenkova, A., & Verma, R. (2014). CREMA-D: Crowd-sourced emotional multimodal actors dataset. <em>IEEE Transactions on Affective Computing</em>, 5(4), 377–390. <a href="https://github.com/CheyneyComputerScience/CREMA-D" target="_blank">Available at GitHub</a></p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>2. EmoDB Dataset</h4>
-                    <p>Burkhardt, F., Paeschke, A., Rolfes, M., Sendlmeier, W. F., & Weiss, B. (2005). A database of German emotional speech. <em>Proceedings of Interspeech</em>, 1517–1520.</p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>3. RAVDESS Dataset</h4>
-                    <p>Livingstone, S. R., & Russo, F. A. (2018). The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS): A dynamic, multimodal set of facial and vocal expressions in North American English. <em>PloS One</em>, 13(5), e0196391. <a href="https://zenodo.org/record/1188976" target="_blank">Available at Zenodo</a></p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>4. SAVEE Dataset</h4>
-                    <p>Jackson, P., & Haq, S. (2008). Surrey Audio-Visual Expressed Emotion (SAVEE) Database. University of Surrey, UK. <a href="http://kahlan.eps.surrey.ac.uk/savee/" target="_blank">Official site</a></p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>5. TESS Dataset</h4>
-                    <p>Pichora-Fuller, M. K., Dupuis, K., & Reed, M. (2020). Toronto Emotional Speech Set (TESS). University of Toronto, Psychology Department.</p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>6. IEMOCAP Dataset</h4>
-                    <p>Busso, C., Bulut, M., Lee, C.-C., Kazemzadeh, A., Mower, E., Kim, S., … & Narayanan, S. S. (2008). IEMOCAP: Interactive emotional dyadic motion capture database. <em>Language Resources and Evaluation</em>, 42(4), 335–359. <a href="https://sail.usc.edu/iemocap/" target="_blank">Official access page</a></p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>7. nEMO Dataset</h4>
-                    <p>Spapé, M., Mäkelä, K., & Ruotsalo, T. (2024). NEMO: A Database for Emotion Analysis Using Functional Near-Infrared Spectroscopy. <em>IEEE Transactions on Affective Computing</em>, 15(3), 1166-1177. doi: 10.1109/TAFFC.2023.3315971</p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>8. MELD Dataset</h4>
-                    <p>Poria, S., Hazarika, D., Majumder, N., Naik, G., Cambria, E., & Mihalcea, R. (2019). MELD: A Multimodal Multi-Party Dataset for Emotion Recognition in Conversations. <em>Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics</em>, 527–536. <a href="https://affective-meld.github.io/" target="_blank">Project page</a></p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>9. SpecAugment</h4>
-                    <p>Park, D. S., Chan, W., Zhang, Y., Chiu, C.-C., Zoph, B., Cubuk, E. D., & Le, Q. V. (2019). SpecAugment: A simple data augmentation method for automatic speech recognition. <em>Interspeech</em>, 2613–2617. <a href="https://arxiv.org/abs/1904.08779" target="_blank">arXiv preprint</a></p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>10. CRNN Architectures</h4>
-                    <p>Graves, A., & Schmidhuber, J. (2005). Framewise phoneme classification with bidirectional LSTM and other neural network architectures. <em>Neural Networks</em>, 18(5–6), 602–610.</p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>11. Attention Mechanisms</h4>
-                    <p>Bahdanau, D., Cho, K., & Bengio, Y. (2014). Neural machine translation by jointly learning to align and translate. <em>arXiv preprint arXiv:1409.0473</em>.</p>
-                    <p style="margin-top: 8px;">Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., … & Polosukhin, I. (2017). Attention is All You Need. <em>Advances in Neural Information Processing Systems</em>, 30.</p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>12. Speech Emotion Recognition Survey</h4>
-                    <p>El Ayadi, M., Kamel, M. S., & Karray, F. (2011). Survey on speech emotion recognition: Features, classification schemes, and databases. <em>Pattern Recognition</em>, 44(3), 572–587.</p>
-                    <p style="margin-top: 8px;">Khalil, R. A., Jones, E., Babar, M. I., Jan, T., Zafar, M. H., & Alhussain, T. (2019). Speech emotion recognition using deep learning techniques: A review. <em>IEEE Access</em>, 7, 117327–117345.</p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>13. Librosa Library</h4>
-                    <p>McFee, B., Raffel, C., Liang, D., Ellis, D. P., McVicar, M., Battenberg, E., & Nieto, O. (2015). librosa: Audio and music analysis in Python. <em>Proceedings of the 14th Python in Science Conference</em>, 18–25. <a href="https://librosa.org/" target="_blank">Library website</a></p>
-                </div>
-                
-                <div class="citation-item">
-                    <h4>14. PyTorch</h4>
-                    <p>Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., … & Chintala, S. (2019). PyTorch: An imperative style, high-performance deep learning library. <em>Advances in Neural Information Processing Systems</em>, 32. <a href="https://pytorch.org/" target="_blank">Official site</a></p>
-                </div>
+            <div class="citation-item">
+                <h4>1. CREMA-D Dataset</h4>
+                <p>Cao, H., Cooper, D. G., Keutmann, M. K., Gur, R. C., Nenkova, A., & Verma, R. (2014). CREMA-D: Crowd-sourced emotional multimodal actors dataset. <em>IEEE Transactions on Affective Computing</em>, 5(4), 377-390. <a href="https://github.com/CheyneyComputerScience/CREMA-D" target="_blank">Dataset repository</a></p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>2. RAVDESS Dataset</h4>
+                <p>Livingstone, S. R., & Russo, F. A. (2018). The Ryerson Audio-Visual Database of Emotional Speech and Song (RAVDESS): A dynamic, multimodal set of facial and vocal expressions in North American English. <em>PLoS ONE</em>, 13(5), e0196391. <a href="https://zenodo.org/record/1188976" target="_blank">Dataset repository</a></p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>3. SAVEE Dataset</h4>
+                <p>Jackson, P., & Haq, S. (2014). Surrey Audio-Visual Expressed Emotion (SAVEE) database. <em>University of Surrey</em>. <a href="http://kahlan.eps.surrey.ac.uk/savee/" target="_blank">Dataset website</a></p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>4. TESS Dataset</h4>
+                <p>Dupuis, K., & Pichora-Fuller, M. K. (2010). Toronto emotional speech set (TESS). <em>University of Toronto, Psychology Department</em>. <a href="https://tspace.library.utoronto.ca/handle/1807/24487" target="_blank">Dataset repository</a></p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>5. CRNN Architecture</h4>
+                <p>Shi, X., Chen, Z., Wang, H., Yeung, D. Y., Wong, W. K., & Woo, W. C. (2015). Convolutional LSTM network: A machine learning approach for precipitation nowcasting. <em>Advances in Neural Information Processing Systems</em>, 28.</p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>6. Attention Mechanisms</h4>
+                <p>Bahdanau, D., Cho, K., & Bengio, Y. (2014). Neural machine translation by jointly learning to align and translate. <em>arXiv preprint arXiv:1409.0473</em>.</p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>7. Mel Spectrograms</h4>
+                <p>Stevens, S. S., Volkmann, J., & Newman, E. B. (1937). A scale for the measurement of the psychological magnitude pitch. <em>Journal of the Acoustical Society of America</em>, 8(3), 185-190.</p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>8. SpecAugment</h4>
+                <p>Park, D. S., Chan, W., Zhang, Y., Chiu, C. C., Zoph, B., Cubuk, E. D., & Le, Q. V. (2019). SpecAugment: A simple data augmentation method for automatic speech recognition. <em>arXiv preprint arXiv:1904.08779</em>.</p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>9. Distance-Weighted Loss</h4>
+                <p>Liu, W., Wen, Y., Yu, Z., Li, M., Raj, B., & Song, L. (2017). SphereFace: Deep hypersphere embedding for face recognition. <em>Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition</em>, 212-220.</p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>10. Class-Weighted Loss</h4>
+                <p>Buda, M., Maki, A., & Mazurowski, M. A. (2018). A systematic study of the class imbalance problem in convolutional neural networks. <em>Neural Networks</em>, 106, 249-259.</p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>11. Audio Preprocessing</h4>
+                <p>Giannakopoulos, T. (2015). pyAudioAnalysis: An open-source Python library for audio signal analysis. <em>PLoS ONE</em>, 10(12), e0144610.</p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>12. Speech Emotion Recognition Survey</h4>
+                <p>El Ayadi, M., Kamel, M. S., & Karray, F. (2011). Survey on speech emotion recognition: Features, classification schemes, and databases. <em>Pattern Recognition</em>, 44(3), 572–587.</p>
+                <p style="margin-top: 8px;">Khalil, R. A., Jones, E., Babar, M. I., Jan, T., Zafar, M. H., & Alhussain, T. (2019). Speech emotion recognition using deep learning techniques: A review. <em>IEEE Access</em>, 7, 117327–117345.</p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>13. Librosa Library</h4>
+                <p>McFee, B., Raffel, C., Liang, D., Ellis, D. P., McVicar, M., Battenberg, E., & Nieto, O. (2015). librosa: Audio and music analysis in Python. <em>Proceedings of the 14th Python in Science Conference</em>, 18–25. <a href="https://librosa.org/" target="_blank">Library website</a></p>
+            </div>
+            
+            <div class="citation-item">
+                <h4>14. PyTorch</h4>
+                <p>Paszke, A., Gross, S., Massa, F., Lerer, A., Bradbury, J., Chanan, G., … & Chintala, S. (2019). PyTorch: An imperative style, high-performance deep learning library. <em>Advances in Neural Information Processing Systems</em>, 32. <a href="https://pytorch.org/" target="_blank">Official site</a></p>
             </div>
         </div>
         
@@ -449,7 +382,6 @@
         tryAgain.addEventListener('click', resetUI);
         
         function switchTab(tabName) {
-            // Hide all tabs
             document.querySelectorAll('.tab-content').forEach(content => {
                 content.classList.remove('active');
             });
@@ -457,7 +389,6 @@
                 tab.classList.remove('active');
             });
             
-            // Show selected tab
             if (tabName === 'demo') {
                 document.getElementById('demoTab').classList.add('active');
                 document.querySelectorAll('.tab')[0].classList.add('active');
@@ -525,31 +456,62 @@
         
         async function sendAudioForPrediction(audioBlob) {
             try {
-                // Convert to WAV
                 const arrayBuffer = await audioBlob.arrayBuffer();
                 const audioContext = new AudioContext({ sampleRate: 22050 });
                 const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
                 
-                // Convert to mono WAV
                 const wavBlob = await audioBufferToWav(audioBuffer);
                 
-                // Convert to base64
                 const reader = new FileReader();
                 reader.onloadend = async () => {
                     const base64 = reader.result.split(',')[1];
                     
-                    const response = await fetch('/predict', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ audio: base64 })
-                    });
+                    // Call CGI script instead of Flask endpoint
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), 60000); // 60 second timeout
                     
-                    const result = await response.json();
-                    
-                    if (result.error) {
-                        status.textContent = 'Error: ' + result.error;
-                    } else {
-                        showResult(result);
+                    try {
+                        const response = await fetch('predict.cgi', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ audio: base64 }),
+                            signal: controller.signal
+                        });
+                        
+                        clearTimeout(timeoutId);
+                        
+                        if (!response.ok) {
+                            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+                        }
+                        
+                        // Get response as text first to debug
+                        const responseText = await response.text();
+                        console.log('Raw response:', responseText.substring(0, 200)); // Log first 200 chars
+                        
+                        // Try to parse JSON
+                        let result;
+                        try {
+                            result = JSON.parse(responseText);
+                        } catch (parseError) {
+                            console.error('JSON parse error:', parseError);
+                            console.error('Response text:', responseText);
+                            throw new Error('Invalid JSON response from server. Check console for details.');
+                        }
+                        
+                        if (result.error) {
+                            status.textContent = 'Error: ' + result.error;
+                            console.error('Prediction error:', result);
+                        } else {
+                            showResult(result);
+                        }
+                    } catch (error) {
+                        clearTimeout(timeoutId);
+                        if (error.name === 'AbortError') {
+                            status.textContent = 'Error: Request timed out. The model may be loading. Please try again.';
+                        } else {
+                            status.textContent = 'Error: ' + error.message;
+                            console.error('Fetch error:', error);
+                        }
                     }
                 };
                 reader.readAsDataURL(wavBlob);
@@ -564,7 +526,6 @@
             recordSection.style.display = 'none';
             resultSection.style.display = 'block';
             
-            // Remove emoji, just show text
             document.getElementById('emoji').textContent = 'CLASSIFIED';
             document.getElementById('emotionLabel').textContent = result.emotion;
             document.getElementById('emotionLabel').style.color = result.color;
@@ -597,11 +558,10 @@
             timer.textContent = '';
         }
         
-        // Helper function to convert AudioBuffer to WAV
         function audioBufferToWav(buffer) {
             const numChannels = 1;
             const sampleRate = buffer.sampleRate;
-            const format = 1; // PCM
+            const format = 1;
             const bitDepth = 16;
             
             const data = buffer.getChannelData(0);
@@ -611,7 +571,6 @@
             const arrayBuffer = new ArrayBuffer(bufferLength);
             const view = new DataView(arrayBuffer);
             
-            // WAV header
             writeString(view, 0, 'RIFF');
             view.setUint32(4, 36 + dataLength, true);
             writeString(view, 8, 'WAVE');
@@ -626,7 +585,6 @@
             writeString(view, 36, 'data');
             view.setUint32(40, dataLength, true);
             
-            // Convert samples
             let offset = 44;
             for (let i = 0; i < data.length; i++) {
                 const sample = Math.max(-1, Math.min(1, data[i]));
@@ -645,3 +603,4 @@
     </script>
 </body>
 </html>
+

@@ -1,0 +1,17 @@
+# Apache configuration for UVM Silk
+# This file helps configure the web server for Python/Flask applications
+
+# Enable CGI for Python scripts
+AddHandler cgi-script .py .cgi
+
+# WSGI Configuration for Flask app
+# Silk should automatically detect wsgi.py, but this helps ensure it works
+Options +ExecCGI
+
+# Set the WSGI application entry point
+# Silk typically looks for wsgi.py or application.py in the directory
+# The wsgi.py file exports 'application' which is what WSGI servers need
+
+# For directory access, redirect to the app
+DirectoryIndex wsgi.py index.html index.htm
+

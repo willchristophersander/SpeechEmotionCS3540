@@ -29,7 +29,6 @@ from ser.data.dataset import N_MELS, HOP_LENGTH, N_FFT, MAX_DURATION, MAX_FRAMES
 preprocessor = AudioPreprocessor(sample_rate=SAMPLE_RATE, target_rms=0.1, noise_reduce=True)
 
 EMOTIONS = ['Anger', 'Happy', 'Neutral', 'Sad']
-EMOTION_EMOJIS = {'Anger': '😠', 'Happy': '😄', 'Neutral': '😐', 'Sad': '😢'}
 EMOTION_COLORS = {'Anger': '#FF4444', 'Happy': '#FFD700', 'Neutral': '#4A90D9', 'Sad': '#6B7B8C'}
 
 # Global model
@@ -192,7 +191,6 @@ def predict():
             'confidence': float(confidence),
             'probabilities': {emo: float(probs[i]) for i, emo in enumerate(EMOTIONS)},
             'color': EMOTION_COLORS[predicted_emotion],
-            'emoji': EMOTION_EMOJIS[predicted_emotion],
             'audio_length': len(audio) / SAMPLE_RATE
         })
     
@@ -219,7 +217,16 @@ def health():
     })
 
 
+# Load model when module is imported (for WSGI deployment)
+# This ensures the model is loaded whether running directly or via WSGI
+try:
+    load_model()
+except Exception as e:
+    print(f"Warning: Could not load model during import: {e}")
+    print("Model will be loaded on first request if running via WSGI")
+
 if __name__ == '__main__':
+    # For local development
     load_model()
     print("\n" + "="*50)
     print("Speech Emotion Recognition Demo (CRNN)")
