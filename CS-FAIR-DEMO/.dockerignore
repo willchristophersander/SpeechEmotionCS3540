@@ -1,0 +1,46 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Model checkpoints (will be included, but ignore backups and intermediate checkpoints)
+*.pth.bak
+checkpoints/*/checkpoint_epoch_*.pth
+# Keep the main model files:
+# checkpoints/4class/crnn_emotion_model.pth
+# checkpoints/4class/crnn_emotion_model_quantized.pth
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+debug_audio*.wav
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+
+# Other
+*.txt
+!requirements.txt
+!runtime.txt
+
