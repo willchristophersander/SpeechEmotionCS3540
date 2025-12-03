@@ -3,7 +3,7 @@ services:
     name: speech-emotion-recognition
     env: python
     rootDir: CS-FAIR-DEMO
-    buildCommand: pip install -r requirements.txt
+    buildCommand: pip install -r requirements.txt && python quantize_model.py || echo "Quantization skipped (model may already be quantized)"
     startCommand: gunicorn app:app --timeout 120 --workers 1 --threads 2
     envVars:
       - key: PYTHON_VERSION
