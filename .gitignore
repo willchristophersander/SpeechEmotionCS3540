@@ -43,7 +43,7 @@ Thumbs.db
 CREMA-D/
 
 # Model files
-models/
+/models/
 *.joblib
 *.pkl
 
