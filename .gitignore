@@ -42,8 +42,9 @@ Thumbs.db
 # features/*.csv  # Commented out to include extracted features
 CREMA-D/
 
-# Model files
-/models/
+# Model files (ignore all except CRNN_Model which contains best models for GitHub)
+/models/*
+!/models/CRNN_Model/
 *.joblib
 *.pkl
 

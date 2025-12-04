@@ -1,5 +1,7 @@
 # SpeechEmotionCS3540
 
+**William Sander and Seth Shienbrood CS3540 Project**
+
 A comprehensive speech emotion recognition research project using deep learning techniques, focusing on Convolutional Recurrent Neural Networks (CRNN) with attention mechanisms.
 
 ## Overview
@@ -12,7 +14,7 @@ This project explores various approaches to speech emotion recognition, from tra
 - **CRNN 4-Class Model**: 81.29% validation accuracy (Anger, Happy, Neutral, Sad)
 - **CRNN 6-Class Model**: 81.46% validation accuracy (Anger, Happy, Neutral, Sad, Fear, Surprise)
 
-Best models are stored in the [`CRNN_Model/`](CRNN_Model/) directory. See [`CRNN_Model/README.md`](CRNN_Model/README.md) for detailed information.
+Best models are stored in the [`models/CRNN_Model/`](models/CRNN_Model/) directory. See [`models/CRNN_Model/README.md`](models/CRNN_Model/README.md) for detailed information.
 
 ### 📊 Datasets
 The project supports 8 emotion recognition datasets:
@@ -55,17 +57,18 @@ python scripts/training/Train_CRNN_MultiDataset_6Class.py
 
 3. **Visualize model attention:**
 ```bash
-python scripts/interpret_model.py --model CRNN_Model/crnn_multi_dataset_6class.pth --audio path/to/audio.wav
+python scripts/interpret_model.py --model models/CRNN_Model/crnn_multi_dataset_6class.pth --audio path/to/audio.wav
 ```
 
 ## Project Structure
 
 ```
 SpeechEmotionCS3540/
-├── CRNN_Model/              # Best CRNN models and documentation
-│   ├── crnn_multi_dataset.pth
-│   ├── crnn_multi_dataset_6class.pth
-│   └── README.md
+├── models/
+│   └── CRNN_Model/          # Best CRNN models and documentation
+│       ├── crnn_multi_dataset.pth
+│       ├── crnn_multi_dataset_6class.pth
+│       └── README.md
 ├── scripts/
 │   ├── training/           # Training scripts
 │   ├── data/               # Modular data loaders
@@ -80,7 +83,7 @@ SpeechEmotionCS3540/
 
 ## Documentation
 
-- **[CRNN_Model/README.md](CRNN_Model/README.md)** - Best models and usage
+- **[models/CRNN_Model/README.md](models/CRNN_Model/README.md)** - Best models and usage
 - **[PROJECT_SUMMARY_CRNN.md](PROJECT_SUMMARY_CRNN.md)** - Architecture, evolution, and research
 - **[models/MODEL_PERFORMANCE.md](models/MODEL_PERFORMANCE.md)** - Performance leaderboard
 - **[scripts/INTERPRETABILITY_GUIDE.md](scripts/INTERPRETABILITY_GUIDE.md)** - Model visualization guide
