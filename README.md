@@ -1,176 +1,114 @@
-# Speech Emotion Recognition Project
+# SpeechEmotionCS3540
 
-This is a **machine learning project** that focuses on emotional analysis of vocal data using deep learning techniques. The project implements Convolutional Recurrent Neural Networks (CRNN) with attention mechanisms to classify emotions from speech audio signals.
+A comprehensive speech emotion recognition research project using deep learning techniques, focusing on Convolutional Recurrent Neural Networks (CRNN) with attention mechanisms.
 
-## Project Structure
+## Overview
 
-```
-├── config/                 # Configuration files
-│   └── config.py          # Paths, settings, and constants
-│
-├── src/                    # Source code
-│   ├── models/            # Model definitions
-│   │   ├── CNN_Experimental.py
-│   │   ├── Neural_Network_Experimental.py
-│   │   ├── Ensemble_Classifier.py
-│   │   └── ...
-│   ├── preprocessing/     # Data preprocessing and feature extraction
-│   │   ├── extract_features.py
-│   │   ├── prepare_features_and_labels.py
-│   │   └── ...
-│   └── utils/            # Utility functions
-│       └── paths.py      # Path helper functions
-│
-├── scripts/               # Executable scripts
-│   ├── training/         # Model training scripts
-│   │   ├── Train_*.py
-│   │   ├── Optimize_*.py
-│   │   └── ...
-│   ├── evaluation/       # Model evaluation scripts
-│   │   └── Evaluate_*.py
-│   └── analysis/         # Data analysis scripts
-│       ├── *_analysis.py
-│       └── ...
-│
-├── features/              # Extracted features (CSV files)
-├── models/                # Saved model files (.pth)
-├── results/               # Results and outputs
-├── visualizations/        # Generated plots and figures
-└── requirements.txt       # Python dependencies
+This project explores various approaches to speech emotion recognition, from traditional feature-based machine learning to state-of-the-art deep learning architectures. The primary focus is on CRNN models that process mel spectrograms end-to-end for emotion classification.
 
-```
+## Key Components
 
-## Dataset
+### 🎯 Best Models
+- **CRNN 4-Class Model**: 81.29% validation accuracy (Anger, Happy, Neutral, Sad)
+- **CRNN 6-Class Model**: 81.46% validation accuracy (Anger, Happy, Neutral, Sad, Fear, Surprise)
 
-- **CREMA-D**: Crowd Sourced Emotional Multimodal Actors Dataset
-- Contains audio files with 6 emotions: Anger, Disgust, Fear, Happy, Neutral, Sad
-- Multiple emotion levels: Low, Medium, High
-- Audio formats: WAV, MP3
+Best models are stored in the [`CRNN_Model/`](CRNN_Model/) directory. See [`CRNN_Model/README.md`](CRNN_Model/README.md) for detailed information.
 
-## Features
+### 📊 Datasets
+The project supports 8 emotion recognition datasets:
+- **CREMA-D** - ~7,400 samples (English, professional actors)
+- **RAVDESS** - ~1,400 samples (English, high quality speech)
+- **RAVDESS Songs** - ~1,700 samples (English, emotional songs)
+- **SAVEE** - ~480 samples (British English)
+- **TESS** - ~2,400 samples (English, older females)
+- **IEMOCAP** - ~4,900 samples (English, conversational)
+- **nEMO** - ~4,500 samples (Polish, acted)
+- **EmoDB** - ~535 samples (German, acted)
 
-- **Deep Learning Models**: 
-  - CRNN (Convolutional Recurrent Neural Network) with attention mechanisms
-  - End-to-end training from mel spectrograms
-  - Support for 4-class and 6-class emotion classification
-- **Comprehensive Dataset Support**: 
-  - 8 emotion recognition datasets: CREMA-D, EmoDB, RAVDESS, SAVEE, TESS, IEMOCAP, nEMO, MELD
-  - Unified preprocessing pipeline
-- **Advanced ML Techniques**:
-  - Mel spectrogram feature extraction
-  - Data augmentation (SpecAugment, pitch shift, time stretch, noise injection)
-  - Class-weighted loss functions for imbalanced data
-  - Distance-weighted loss for emotion similarity modeling
-- **Model Training & Evaluation**:
-  - Checkpointing and resume training
-  - Early stopping with validation monitoring
-  - Per-class accuracy reporting
-  - Comprehensive logging
+### 🏗️ Architecture
+- **3-layer CNN** (32→64→128 channels) for feature extraction
+- **2-layer Bidirectional LSTM** (128 hidden units) for temporal modeling
+- **Attention mechanism** for focusing on important time regions
+- **Fully connected layers** for classification
 
-## Setup
+### 🔬 Research & Development
+- Model interpretability tools (attention visualization, Grad-CAM)
+- Comprehensive data loading system with modular dataset loaders
+- Performance tracking and model registry
+- Self-documenting codebase with auto-generated documentation
 
-1. Install dependencies:
+## Quick Start
+
+1. **Install dependencies:**
 ```bash
 pip install -r requirements.txt
 ```
 
-2. Configure paths (optional):
-   - Edit `config/config.py` to set your CREMA-D audio directory
-   - Or set the `CREMA_D_AUDIO_DIR` environment variable
-
-## Usage
-
-### Feature Extraction
+2. **Train a model:**
 ```bash
-# Extract features from audio files
-python src/preprocessing/extract_features.py
+# 4-class model
+python scripts/training/Train_CRNN_MultiDataset.py
 
-# Prepare features and labels for ML training
-python src/preprocessing/prepare_features_and_labels.py
-
-# Clean dataset files (if needed)
-python src/preprocessing/clean_dataset.py
+# 6-class model
+python scripts/training/Train_CRNN_MultiDataset_6Class.py
 ```
 
-### Model Training
+3. **Visualize model attention:**
 ```bash
-# Train CRNN model (4-class)
-cd demo
-python train_unified.py
-
-# Train CRNN model (6-class)
-python train_unified_6class.py
-
-# Train enhanced CRNN model
-python train_unified_enhanced.py
-
-# Legacy training scripts (feature-based models)
-python scripts/training/Train_Dense_Ensemble.py
-python scripts/training/Train_LSTM_Ensemble.py
+python scripts/interpret_model.py --model CRNN_Model/crnn_multi_dataset_6class.pth --audio path/to/audio.wav
 ```
 
-### Evaluation
-```bash
-# Evaluate ensemble models
-python scripts/evaluation/Evaluate_4Way_Ensemble.py
+## Project Structure
+
+```
+SpeechEmotionCS3540/
+├── CRNN_Model/              # Best CRNN models and documentation
+│   ├── crnn_multi_dataset.pth
+│   ├── crnn_multi_dataset_6class.pth
+│   └── README.md
+├── scripts/
+│   ├── training/           # Training scripts
+│   ├── data/               # Modular data loaders
+│   ├── interpret_model.py  # Model interpretability
+│   └── visualize_all_emotions.py
+├── models/                  # All trained models
+├── DataSets/                # Dataset storage
+├── visualizations/         # Generated plots and analysis
+├── docs/                    # Documentation
+└── PROJECT_SUMMARY_CRNN.md  # Comprehensive project summary
 ```
 
-### Analysis
-```bash
-# Run analysis scripts
-python scripts/analysis/logistic_regression_analysis.py
-python scripts/analysis/pitch_analysis.py
-python scripts/analysis/pairwise_discriminatory_analysis.py
-```
+## Documentation
 
-## Configuration
+- **[CRNN_Model/README.md](CRNN_Model/README.md)** - Best models and usage
+- **[PROJECT_SUMMARY_CRNN.md](PROJECT_SUMMARY_CRNN.md)** - Architecture, evolution, and research
+- **[models/MODEL_PERFORMANCE.md](models/MODEL_PERFORMANCE.md)** - Performance leaderboard
+- **[scripts/INTERPRETABILITY_GUIDE.md](scripts/INTERPRETABILITY_GUIDE.md)** - Model visualization guide
+- **[scripts/data/loaders/FOLDER_CONTENTS.md](scripts/data/loaders/FOLDER_CONTENTS.md)** - Dataset loader documentation
 
-The project uses a centralized configuration file (`config/config.py`) for:
-- Data paths (audio directory, feature files)
-- Model paths (saved models directory)
-- Hyperparameters (random seed, train/test split, etc.)
-- Emotion and intensity mappings
+## Features
 
-To customize paths, edit `config/config.py` or set environment variables:
-```bash
-export CREMA_D_AUDIO_DIR="/path/to/your/audio/files"
-```
+- ✅ **End-to-end training** from raw audio to emotion classification
+- ✅ **Multi-dataset support** with unified preprocessing
+- ✅ **Model interpretability** with attention and Grad-CAM visualizations
+- ✅ **Modular architecture** for easy experimentation
+- ✅ **Performance tracking** with automatic model registry
+- ✅ **Self-documenting** codebase with auto-generated docs
 
-## Model Performance
+## Research Contributions
 
-**Current Best Performance:**
-- **4-Class Model**: 77.49% test accuracy, 77.26% validation accuracy
-  - Emotions: Anger, Happy, Neutral, Sad
-- **6-Class Model**: Training in progress
-  - Emotions: Anger, Happy, Neutral, Sad, Fear, Surprise
+This project implements and extends research on:
+- CRNN architectures for speech emotion recognition
+- Attention mechanisms for temporal modeling
+- Multi-dataset training and generalization
+- Model interpretability for emotion recognition
 
-**Model Architecture:**
-- CRNN with 3 CNN blocks (32→64→128 channels)
-- Bidirectional LSTM (2 layers, 128 hidden units)
-- Attention mechanism for temporal focus
-- Fully connected classification layers
+See `PROJECT_SUMMARY_CRNN.md` for detailed citations and references.
 
-See `MODEL_EVOLUTION_SUMMARY.md` for detailed evolution from feature extraction to deep learning approaches.
+## License
 
-## Dependencies
+[Add your license here]
 
-**Core ML/AI Libraries:**
-- **PyTorch** - Deep learning framework for CRNN models
-- **librosa** - Audio processing and mel spectrogram extraction
-- **scikit-learn** - Traditional ML models and utilities
+## Contact
 
-**Data Processing:**
-- numpy, pandas - Data handling and manipulation
-- scipy - Signal processing
-
-**Visualization:**
-- matplotlib, seaborn - Plotting and analysis
-
-See `requirements.txt` for complete list with versions.
-
-## Notes
-
-- Model files (`.pth`) are saved in the `models/` directory
-- Results and outputs are saved in the `results/` directory
-- Visualizations are saved in the `visualizations/` directory
-- Feature files are stored in the `features/` directory
+[Add contact information here]
