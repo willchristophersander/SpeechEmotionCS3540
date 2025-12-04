@@ -2,7 +2,7 @@
 
 **William Sander and Seth Shienbrood CS3540 Project**
 
-A comprehensive speech emotion recognition research project using deep learning techniques, focusing on Convolutional Recurrent Neural Networks (CRNN) with attention mechanisms.
+A comprehensive speech emotion recognition research project using multiple deep learning architectures, techniques, data refinement methods and data ingestion methods.
 
 ## Overview
 
