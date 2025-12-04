@@ -6,8 +6,7 @@ A comprehensive speech emotion recognition research project using deep learning 
 
 ## Overview
 
-This project explores various approaches to speech emotion recognition, from traditional feature-based machine learning to state-of-the-art deep learning architectures. The primary focus is on CRNN models that process mel spectrograms end-to-end for emotion classification.
-
+This project explores various approaches to speech emotion recognition, from feature-based machine learning to CRNN spectogram architectures. 
 ## Key Components
 
 ###  Best Models
