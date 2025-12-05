@@ -13,7 +13,7 @@ This project explores various approaches to speech emotion recognition, from fea
 - **CRNN 4-Class Model**: 81.29% validation accuracy (Anger, Happy, Neutral, Sad)
 - **CRNN 6-Class Model**: 81.46% validation accuracy (Anger, Happy, Neutral, Sad, Fear, Surprise)
 
-Best models are stored in the [`models/CRNN_Model/`](models/CRNN_Model/) directory. See [`models/CRNN_Model/README.md`](models/CRNN_Model/README.md) for detailed information.
+Best models are stored in the models directory. 
 
 ###  Datasets
 The project supports 8 emotion recognition datasets:
@@ -26,25 +26,11 @@ The project supports 8 emotion recognition datasets:
 - **nEMO** - ~4,500 samples (Polish, acted)
 - **EmoDB** - ~535 samples (German, acted)
 
-###  Architecture
-- **3-layer CNN** (32→64→128 channels) for feature extraction
-- **2-layer Bidirectional LSTM** (128 hidden units) for temporal modeling
-- **Attention mechanism** for focusing on important time regions
-- **Fully connected layers** for classification
-
 ###  Research & Development
 - Model interpretability tools (attention visualization, Grad-CAM)
 - Comprehensive data loading system with modular dataset loaders
 - Performance tracking and model registry
 - Self-documenting codebase with auto-generated documentation
-
-## Documentation
-
-- **[models/CRNN_Model/README.md](models/CRNN_Model/README.md)** - Best models and usage
-- **[PROJECT_SUMMARY_CRNN.md](PROJECT_SUMMARY_CRNN.md)** - Architecture, evolution, and research
-- **[models/MODEL_PERFORMANCE.md](models/MODEL_PERFORMANCE.md)** - Performance leaderboard
-- **[scripts/INTERPRETABILITY_GUIDE.md](scripts/INTERPRETABILITY_GUIDE.md)** - Model visualization guide
-- **[scripts/data/loaders/FOLDER_CONTENTS.md](scripts/data/loaders/FOLDER_CONTENTS.md)** - Dataset loader documentation
 
 ## Research Contributions
 
