@@ -9,7 +9,7 @@ A comprehensive speech emotion recognition research project using multiple deep 
 This project explores various approaches to speech emotion recognition, from feature-based machine learning to CRNN spectogram architectures. 
 ## Key Components
 
-###  Best Models
+###  Models
 - **CRNN 4-Class Model**: 81.29% validation accuracy (Anger, Happy, Neutral, Sad)
 - **CRNN 6-Class Model**: 81.46% validation accuracy (Anger, Happy, Neutral, Sad, Fear, Surprise)
 
