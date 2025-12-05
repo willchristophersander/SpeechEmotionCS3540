@@ -1,6 +1,6 @@
 # SpeechEmotionCS3540
 
-**William Sander and Seth Shienbrood CS3540 Project**
+**Seth Shienbrood & William Sander CS3540 Project**
 
 A comprehensive speech emotion recognition research project using multiple deep learning architectures, techniques, data refinement methods and data ingestion methods.
 
