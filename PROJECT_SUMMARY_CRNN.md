@@ -1,7 +1,7 @@
 # Speech Emotion Recognition: Project Summary
 
 **Project:** CS 3540 Speech Emotion Recognition  
-**Date:** December 2024  
+**Date:** December 2025  
 **Current Best Model:** CRNN + Bidirectional LSTM with Attention  
 **Best Validation Accuracy:** 81.29% (4-class), 76.76% (6-class)
 
