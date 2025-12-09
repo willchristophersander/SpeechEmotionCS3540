@@ -48,7 +48,7 @@ This folder contains the best-performing CRNN models:
 - **Validation Accuracy:** 81.29%
 - **Emotions:** Anger, Happy, Neutral, Sad
 - **Architecture:** 3-layer CNN (32→64→128) + 2-layer BiLSTM (128) + Attention
-- **Training Script:** `scripts/training/Train_CRNN_MultiDataset.py`
+- **Training Script:** `Train_CRNN_MultiDataset.py` (also available in `scripts/training/`)
 - **Datasets:** CREMA-D, RAVDESS, SAVEE, TESS, IEMOCAP, nEMO
 
 ### 6-Class Model (`crnn_multi_dataset_6class.pth`)
@@ -56,7 +56,7 @@ This folder contains the best-performing CRNN models:
 - **Test Accuracy:** 81.0%
 - **Emotions:** Anger, Happy, Neutral, Sad, Fear, Surprise
 - **Architecture:** 3-layer CNN (32→64→128) + 2-layer BiLSTM (128) + Attention
-- **Training Script:** `scripts/training/Train_CRNN_MultiDataset_6Class.py`
+- **Training Script:** `Train_CRNN_MultiDataset_6Class.py` (also available in `scripts/training/`)
 - **Datasets:** CREMA-D, RAVDESS, RAVDESS Songs, SAVEE, TESS, IEMOCAP, nEMO, EmoDB
 
 ## Dataset
@@ -112,11 +112,18 @@ python src/preprocessing/clean_dataset.py
 ```
 
 ### Model Training
-```bash
-# Train CRNN model (4-class)
-python scripts/training/Train_CRNN_MultiDataset.py
 
-# Train CRNN model (6-class)
+**Training scripts are available in this folder:**
+
+```bash
+# Train CRNN model (4-class) - from this folder
+python models/CRNN_Model/Train_CRNN_MultiDataset.py
+
+# Train CRNN model (6-class) - from this folder
+python models/CRNN_Model/Train_CRNN_MultiDataset_6Class.py
+
+# Or from the project root using the scripts folder
+python scripts/training/Train_CRNN_MultiDataset.py
 python scripts/training/Train_CRNN_MultiDataset_6Class.py
 
 # Legacy training scripts (feature-based models)
@@ -210,6 +217,7 @@ See `requirements.txt` for complete list with versions.
 
 - Model files (`.pth`) are saved in the `models/` directory
 - Best models are also stored in `CRNN_Model/` directory
+- **Training scripts** for both 4-class and 6-class models are included in this folder
 - Results and outputs are saved in the `results/` directory
 - Visualizations are saved in the `visualizations/` directory
 - Feature files are stored in the `features/` directory
